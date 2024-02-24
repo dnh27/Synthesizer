@@ -1,0 +1,1 @@
+![[SkizzeV2 2024-02-21 21.12.31.excalidraw]]
