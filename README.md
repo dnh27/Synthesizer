@@ -15,7 +15,7 @@ Ich will einen digitalen Synthesizer bauen, welcher einem modernen subtraktivem 
 ### Skizzen
 
 <img src="Skizze.png" width=800>
-<img src="SkizzeOhneKlaviatur.png" width=800> 
+<img src="BlockSchaltBild.png" width=800> 
 
 ### Was zu tun ist
 [Schritte](Schritte.md)
