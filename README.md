@@ -1,7 +1,8 @@
 ### Skizzen
 
 <img src="Skizze.png">
-<img src="SkizzeOhneKlaviatur.png"> 
+
+<img src="BlockSchaltBild.png">
 
 ### Was zu tun ist
 [Schritte](Schritte.md)
