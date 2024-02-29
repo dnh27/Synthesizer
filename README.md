@@ -15,6 +15,8 @@ Ich will einen digitalen Synthesizer bauen, welcher einem modernen subtraktivem 
 ### Skizzen
 
 <img src="Skizze.png" width=800>
+
+### Blockschaltbild
 <img src="BlockSchaltBild.png" width=800> 
 
 ### Was zu tun ist
