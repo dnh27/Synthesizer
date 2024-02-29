@@ -4,7 +4,7 @@ Folgende Ressourcen werde ich verwenden um den Synthesizer zu bauen:
  -  Software
 	 - Arduino IDE
 	 - [Teensy Audio Library](https://www.pjrc.com/teensy/td_libs_Audio.html)
-	 - ([Faust (TAL erweiterung)]([faust2[...] Tools - Faust Documentation](https://faustdoc.grame.fr/manual/tools/#faust2teensy)))
+	 - [Faust (TAL erweiterung)](https://faustdoc.grame.fr/manual/tools/#faust2teensy)
  -  Hardware
 	 -  Synthesizer [Bauteile](Digital_Materialliste.md)
 	 -  Gebrauchtes Keyboard: für Tasten, Midi und Pitch Bend Rad  
