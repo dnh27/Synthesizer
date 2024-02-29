@@ -1,1 +1,1 @@
-![[Skizze 2024-02-15 18.03.17.excalidraw]]
+![[Excalidraw/Skizze 2024-02-15 18.03.17.excalidraw]]
