@@ -33,6 +33,8 @@ Ich will einen digitalen Synthesizer bauen, welcher einem modernen subtraktivem 
 	- Volumen
 	- 3.5mm Audio Output
 - Sperrholz Gehäuse
+<img src="MinimalesProdukt.png" width=800>
+
 ### Falls noch Zeit bleibt
 [Extras](Extras.md)
 
