@@ -25,7 +25,17 @@ Ich will einen digitalen Synthesizer bauen, welcher einem modernen subtraktivem 
 ### Materialliste
 [Digital](Digital_Materialliste.md)
 
+### Minimales Produkt
+ - Komponente
+	- 1x Generative Oszillator mit 2 Wellenformen (Sinus und Saw).
+	- 1x Modulierender Oszillator mit 2 Wellenformen (Sinus und Saw) und Frequenz veränderbar.
+	- Envelope mit Attack, Decay, Sustain, Release
+	- Volumen
+	- 3.5mm Audio Output
+- Sperrholz Gehäuse
 ### Falls noch Zeit bleibt
 [Extras](Extras.md)
 
 [Links](Links.md)
+
+
