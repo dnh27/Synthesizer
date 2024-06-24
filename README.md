@@ -17,7 +17,7 @@ Ich will einen digitalen Synthesizer bauen, welcher einem modernen subtraktivem 
 <img src="Skizzen/SkizzeV3.png" width=800>
 
 #### Minimales Produkt
-<img src="Skizzen/MinimalesProduktV2.excalidraw" width=800> 
+<img src="Skizzen/MinimalesProduktV2.excalidraw.png" width=800> 
 
 #### Funktionsweise
 <img src="Skizzen/BlockSchaltBild.png" width=800> 
