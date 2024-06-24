@@ -13,7 +13,13 @@ Folgende Ressourcen werde ich verwenden um den Synthesizer zu bauen:
 Ich will einen digitalen Synthesizer bauen, welcher einem modernen subtraktivem Synthesizer, bei den wichtigsten Funktionen in nichts nachsteht. D.h. mehrere Oszillatoren, Filter, Artikulationsmöglichkeiten und Effekte
 ### Skizzen
 
-<img src="Skizzen/Skizze.png" width=800>
+#### Ziel
+<img src="Skizzen/SkizzeV3.png" width=800>
+
+#### Minimales Produkt
+<img src="Skizzen/MinimalesProduktV2.excalidraw" width=800> 
+
+#### Funktionsweise
 <img src="Skizzen/BlockSchaltBild.png" width=800> 
 
 ### Was zu tun ist
