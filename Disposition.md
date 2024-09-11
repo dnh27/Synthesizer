@@ -21,7 +21,7 @@ Erklärung der Komponente im Kontext der behandelten Synthese Methoden
 
 ### Modulator
 
-###  Filter
+### Filter
 
 ### Envelope
 
@@ -45,8 +45,10 @@ Welche Art von Envelope. Was man alles mit einer Envelope versehen kann.
 
 ## Effekte
 
+Welche Effekte enthalten sind
 ## Mixer
 
+Volumen- und Panningkontrolle 
 ## UI Elemente
 
 Beschreibung der UI Elemente wie Potis, Rotary Encoders, Schalter, Displays
@@ -57,5 +59,13 @@ Auflistung der Ein- und Ausgangsstellen vom Teensy
 
 (Blockschaltbild)
 
-Erklärung wie der Teensy und seine Audio Library verwendet wurden um die Komponente zu programmieren. Verwendung von den UI Elementen um mit dem Teensy zu kommunizieren um letztendlich Klänge zu erzeugen.
+Erklärung wie der Teensy und seine Audio Library verwendet wurden um die Komponente zu programmieren. Verwendung von den UI Elementen um mit dem Teensy zu kommunizieren um letztendlich Klänge zu erzeugen und zu verändern.
 
+## Code
+
+Ausdruck des Kompletten Codes
+
+
+# Schlussfolgerung
+
+Antwort auf die Einleitung, kurze Zusammenfassung der Erfahrungen im Projekt, Ausblick
