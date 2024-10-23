@@ -22,7 +22,7 @@ AudioControlSGTL5000     sgtl5000_1; //xy=685.1666870117188,722
 const int NUM_VOICES = 4;  // Increase the number of voices for polyphony
 
 // Arrays to hold multiple voices
-AudioSynthWaveformModulated waveforms[NUM_VOICES];
+AudioSynthWaveformSineHires waveforms[NUM_VOICES];
 AudioEffectEnvelope envelopes[NUM_VOICES];
 
 
@@ -50,13 +50,13 @@ void setup() {
   // Audio Setup
   AudioMemory(20);
   sgtl5000_1.enable();
-  sgtl5000_1.volume(0.3);
+  sgtl5000_1.volume(0.2);
 
   mixer1.gain(0, 0.5);
   
   for (int i = 0; i < NUM_VOICES; i++) {
-    waveforms[i].begin(WAVEFORM_SINE);
-    waveforms[i].amplitude(0.75);
+    waveforms[i].begin();
+    waveforms[i].amplitude(1);
 
     envelopes[i].attack(10.5);
     envelopes[i].decay(150);
@@ -92,7 +92,7 @@ int findFreeVoice() {
   return -1;  // No free voice found
 }
 
-const float DETUNE_AMOUNT = 1.01;  // Adjust this value to detune the oscillators slightly
+const float DETUNE_AMOUNT = 1.0;  // Adjust this value to detune the oscillators slightly
 
 void myNoteOn(byte channel, byte note, byte velocity) {
 
