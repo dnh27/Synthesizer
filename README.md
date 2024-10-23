@@ -20,7 +20,6 @@ Ich will einen digitalen Synthesizer bauen, welcher einem modernen subtraktivem 
 ![500](Skizzen/MinimalesProduktV2.excalidraw.png)
 
 #### Funktionsweise
-
 ![x1000](Skizzen/Blockschaltbild.png)
 
 ### TODO
