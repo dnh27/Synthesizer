@@ -9,3 +9,5 @@ Libraries die verwendet werden (Docs werden lokal generiert):
  - [Faust (TAL erweiterung)]([faust2[...] Tools - Faust Documentation](https://faustdoc.grame.fr/manual/tools/#faust2teensy))
  
 
+## Waveform FM: https://youtu.be/wqc8rZnzTVI?t=992
+
