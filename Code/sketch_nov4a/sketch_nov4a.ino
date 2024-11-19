@@ -3,6 +3,43 @@
 #include <SPI.h>
 #include <SerialFlash.h>
 
+//Volume pin a6
+//Decay pin a5
+//release pin a4
+//sustain pin a3
+//attack pin a2
+//vco pin a1
+//high pass a0
+//VCO a17
+//low pass a16
+//freq a15
+//lfo a14
+
+// Define pins for each potentiometer
+const int pinVolume = A6;
+const int pinDecay = A5;
+const int pinRelease = A4;
+const int pinSustain = A3;
+const int pinAttack = A2;
+const int pinVCO1 = A1;
+const int pinVCO2 = A17;
+const int pinHighPass = A0;
+const int pinLowPass = A16;
+const int pinFreq = A15;
+const int pinLFO = A14;
+
+// Variables to store potentiometer values
+int valueVolume = 0;
+int valueDecay = 0;
+int valueRelease = 0;
+int valueSustain = 0;
+int valueAttack = 0;
+int valueVCO = 0;
+int valueHighPass = 0;
+int valueLowPass = 0;
+int valueFreq = 0;
+int valueLFO = 0;
+
 // GUItool: begin automatically generated code
 AudioSynthWaveformSine   sine3;          //xy=345.33331298828125,101.33333587646484
 AudioSynthWaveformSine   sine1;          //xy=345.3333435058594,310.3333435058594
@@ -59,6 +96,18 @@ void setup() {
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.32);
 
+  pinMode(pinVolume, INPUT);
+  pinMode(pinDecay, INPUT);
+  pinMode(pinRelease, INPUT);
+  pinMode(pinSustain, INPUT);
+  pinMode(pinAttack, INPUT);
+  pinMode(pinVCO1, INPUT);
+  pinMode(pinVCO2, INPUT);
+  pinMode(pinHighPass, INPUT);
+  pinMode(pinLowPass, INPUT);
+  pinMode(pinFreq, INPUT);
+  pinMode(pinLFO, INPUT);
+
   sine0.amplitude(1);
   sine1.amplitude(1);
   sine2.amplitude(1);
@@ -69,20 +118,59 @@ void setup() {
   mixer1.gain(2, 0.25);
   mixer1.gain(3, 0.25);
 
-  envelope0.attack(25); // Experiment between 10-20 ms
+  envelope0.attack(20); // Experiment between 10-20 ms
   envelope0.release(100); // Experiment between 100-200 ms
-  envelope1.attack(25);
-  envelope1.release(100);
-  envelope2.attack(25);
-  envelope2.release(100);
-  envelope3.attack(25);
-  envelope3.release(100);
+  envelope1.attack(20);
+  envelope1.release(150);
+  envelope2.attack(20);
+  envelope2.release(150);
+  envelope3.attack(20);
+  envelope3.release(150);
 
   setupVoices();
   
 }
 
 void loop() {
+  // Read values from each potentiometer
+  sgtl5000_1.volume(map(analogRead(pinVolume), 0, 1023, 0, 0.8));
+
+  // valueAttack = map(analogRead(pinAttack), 0, 1023, 0, 50); 
+
+  // envelope0.attack(valueAttack);
+  // envelope1.attack(valueAttack);
+  // envelope2.attack(valueAttack);
+  // envelope3.attack(valueAttack);
+  
+  // valueDecay = map(analogRead(pinDecay), 0, 1023, 0, 150);
+
+  // envelope0.release(valueDecay);
+  // envelope1.release(valueDecay);
+  // envelope2.release(valueDecay);
+  // envelope3.release(valueDecay);
+
+  // valueSustain = map(analogRead(pinSustain), 0, 1023, 0, 100);
+
+  // envelope0.sustain(valueSustain);
+  // envelope1.sustain(valueSustain);
+  // envelope2.sustain(valueSustain);
+  // envelope3.sustain(valueSustain);
+
+  // valueRelease = map(analogRead(pinRelease), 0, 1023, 0, 150);
+
+  // envelope0.release(valueRelease);
+  // envelope1.release(valueRelease);
+  // envelope2.release(valueRelease);
+  // envelope3.release(valueRelease);
+
+  // valueVCO = analogRead(pinVCO1);
+  // valueVCO = analogRead(pinVCO2);
+
+  // valueHighPass = analogRead(pinHighPass);
+  // valueLowPass = analogRead(pinLowPass);
+  // valueFreq = analogRead(pinFreq);
+  // valueLFO = analogRead(pinLFO);
+
   usbMIDI.read();
 }
 
