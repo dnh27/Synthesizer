@@ -133,7 +133,6 @@ void setup() {
 
 void loop() {
   // Read values from each potentiometer
-  sgtl5000_1.volume(map(analogRead(pinVolume), 0, 1023, 0, 0.8));
 
   // valueAttack = map(analogRead(pinAttack), 0, 1023, 0, 50); 
 
