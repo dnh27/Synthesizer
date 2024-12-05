@@ -1,0 +1,32 @@
+{
+	"nodes":[
+		{"id":"d57bdf420aef2a74","type":"file","file":"Projekte/Synthesizer/Skizzen/MinimalesProduktV2.excalidraw.png","x":-300,"y":-120,"width":400,"height":295},
+		{"id":"a593dc144452ee51","type":"text","text":"Subtraktiver Synth mit Sperrholz Gehäuse","x":-225,"y":-260,"width":250,"height":80,"color":"6"},
+		{"id":"1f4ae84378876cf3","type":"text","text":"TODO:\n\tUI: alles\n\tPorts für Keyboard anschliessen\n\t\n\t","x":-262,"y":200,"width":325,"height":100},
+		{"id":"1f51d3547c5b1fa5","type":"text","text":"STAND HEUTE","x":-660,"y":-2,"width":250,"height":60},
+		{"id":"756b2d718abc79ec","type":"text","text":"UI: Ideal esp32 Webserver mit Website","x":365,"y":-120,"width":250,"height":60},
+		{"id":"879ddaeca1881896","type":"text","text":"Modulierbarer Wavetable\nSynthesizer","x":365,"y":96,"width":250,"height":60},
+		{"id":"ee4cefbda7402370","type":"text","text":"Wahrsch. Debugging wegen Aliasing, Noise, etc.\n","x":720,"y":-30,"width":250,"height":115},
+		{"id":"ea1b7d128fa83f7f","type":"text","text":"Design","x":1160,"y":-2,"width":250,"height":60},
+		{"id":"3b16c866e40c1913","type":"text","text":"Arbeit Schreiben\n","x":1600,"y":-62,"width":250,"height":60},
+		{"id":"885f39765b83c74a","type":"text","text":"Synth Experimentieren","x":1600,"y":85,"width":250,"height":60},
+		{"id":"a1c8994eed1f9b85","type":"text","text":"Abgabe: \n","x":2002,"y":-62,"width":250,"height":60},
+		{"id":"8c959dfb276623e4","type":"text","text":"Präsentation","x":2480,"y":-2,"width":250,"height":60},
+		{"id":"316dc2e9c8703b11","type":"text","text":"Ziel Stand:\n20.10.2024","x":655,"y":-300,"width":380,"height":60},
+		{"id":"61662a2efa059a26","type":"text","text":"Pedal für Effekte, Bends, etc.","x":1160,"y":138,"width":250,"height":75}
+	],
+	"edges":[
+		{"id":"69bf553a3c0a5489","fromNode":"a593dc144452ee51","fromSide":"bottom","toNode":"d57bdf420aef2a74","toSide":"top"},
+		{"id":"9b953aac2b007957","fromNode":"d57bdf420aef2a74","fromSide":"right","toNode":"756b2d718abc79ec","toSide":"left"},
+		{"id":"0f6fc14cf3c60b4c","fromNode":"d57bdf420aef2a74","fromSide":"right","toNode":"879ddaeca1881896","toSide":"left"},
+		{"id":"7abe29fc899bb52d","fromNode":"879ddaeca1881896","fromSide":"right","toNode":"ee4cefbda7402370","toSide":"left"},
+		{"id":"67a2bd191f8aae17","fromNode":"756b2d718abc79ec","fromSide":"right","toNode":"ea1b7d128fa83f7f","toSide":"left"},
+		{"id":"2bf445e1009067da","fromNode":"ee4cefbda7402370","fromSide":"right","toNode":"ea1b7d128fa83f7f","toSide":"left"},
+		{"id":"0796718132d8a818","fromNode":"ea1b7d128fa83f7f","fromSide":"right","toNode":"3b16c866e40c1913","toSide":"left"},
+		{"id":"0f76827f10cf36a3","fromNode":"ea1b7d128fa83f7f","fromSide":"right","toNode":"885f39765b83c74a","toSide":"left"},
+		{"id":"c84f741a03f21622","fromNode":"3b16c866e40c1913","fromSide":"right","toNode":"a1c8994eed1f9b85","toSide":"left"},
+		{"id":"283767262d9ecf2b","fromNode":"885f39765b83c74a","fromSide":"right","toNode":"8c959dfb276623e4","toSide":"left"},
+		{"id":"0519f8b683900816","fromNode":"a1c8994eed1f9b85","fromSide":"right","toNode":"8c959dfb276623e4","toSide":"left"},
+		{"id":"4b24087203f3a097","fromNode":"316dc2e9c8703b11","fromSide":"bottom","toNode":"ee4cefbda7402370","toSide":"top"}
+	]
+}

@@ -1,7 +1,6 @@
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
-#include <SD.h>
 #include <SerialFlash.h>
 
 // GUItool: begin automatically generated code
@@ -28,14 +27,13 @@ AudioConnection          patchCord10(mixer1, 0, i2s1, 1);
 AudioControlSGTL5000     sgtl5000_1;     // Audio shield control
 // GUItool: end automatically generated code
 
-// Struct for managing voice states
+// Keep track of voice states
 struct Voice {
   bool active;
   byte note;
   unsigned long startTime;
 };
 
-// Array to track the state of each voice
 Voice voices[4];
 
 void setupVoices() {
@@ -47,20 +45,20 @@ void setupVoices() {
 void setup() {
   Serial.begin(115200);
 
-  // MIDI setup
+  // MIDI Setup
   usbMIDI.setHandleNoteOn(myNoteOn);
   usbMIDI.setHandleNoteOff(myNoteOff);
 
-  // Audio setup
+  // Audio Setup
   AudioMemory(20);
   sgtl5000_1.enable();
-  sgtl5000_1.volume(0.32);
+  sgtl5000_1.volume(0.6);
 
   // Initialize oscillators
-  sine1.amplitude(0.75);
-  sine2.amplitude(0.75);
-  sine3.amplitude(0.75);
-  sine4.amplitude(0.75);
+  sine1.amplitude(1);
+  sine2.amplitude(1);
+  sine3.amplitude(1);
+  sine4.amplitude(1);
 
   // Initialize mixer gains
   mixer1.gain(0, 0.25);
@@ -69,90 +67,104 @@ void setup() {
   mixer1.gain(3, 0.25);
 
   // Initialize envelopes
+  envelope1.attack(20);
+  envelope1.release(150);
+  envelope2.attack(20);
+  envelope2.release(150);
+  envelope3.attack(20);
+  envelope3.release(150);
+  envelope4.attack(20);
+  envelope4.release(150);
+
   setupVoices();
 }
 
 void loop() {
+  float volume = analogRead(A9);
+  
+  Serial.println(volume);
+  delay(200);
   usbMIDI.read();
 }
 
-// Function to handle Note On messages
 void myNoteOn(byte channel, byte note, byte velocity) {
   float frequency = 440.0 * pow(2.0, (note - 69) / 12.0);
 
   AudioNoInterrupts();
-  int voiceIndex = -1;
 
-  // Find an available voice
+  // Check for available voices
   for (int i = 0; i < 4; i++) {
     if (!voices[i].active) {
-      voiceIndex = i;
-      break;
+      assignVoice(i, note, frequency);
+      AudioInterrupts();
+      return;
     }
   }
 
-  // If no voice is free, steal the oldest one
-  if (voiceIndex == -1) {
-    unsigned long oldestTime = millis();
-    for (int i = 0; i < 4; i++) {
-      if (voices[i].startTime < oldestTime) {
-        oldestTime = voices[i].startTime;
-        voiceIndex = i;
-      }
-    }
-    voices[voiceIndex].active = false;
-  }
-
-  // Assign the note to the selected voice
-  if (voiceIndex != -1) {
-    voices[voiceIndex] = {true, note, millis()};
-
-    // Set frequency and trigger the envelope
-    switch (voiceIndex) {
-      case 0:
-        sine1.frequency(frequency);
-        envelope1.noteOn();
-        break;
-      case 1:
-        sine2.frequency(frequency);
-        envelope2.noteOn();
-        break;
-      case 2:
-        sine3.frequency(frequency);
-        envelope3.noteOn();
-        break;
-      case 3:
-        sine4.frequency(frequency);
-        envelope4.noteOn();
-        break;
+  // All voices are active, find the oldest one to steal
+  unsigned long oldestTime = millis();
+  int oldestVoiceIndex = 0;
+  for (int i = 0; i < 4; i++) {
+    if (voices[i].startTime < oldestTime) {
+      oldestTime = voices[i].startTime;
+      oldestVoiceIndex = i;
     }
   }
+
+  voices[oldestVoiceIndex].active = false;
+  assignVoice(oldestVoiceIndex, note, frequency);
+
   AudioInterrupts();
 }
 
-// Function to handle Note Off messages
 void myNoteOff(byte channel, byte note, byte velocity) {
-  AudioNoInterrupts();
   for (int i = 0; i < 4; i++) {
     if (voices[i].active && voices[i].note == note) {
-      // Turn off the envelope for the corresponding voice
-      switch (i) {
-        case 0:
-          envelope1.noteOff();
-          break;
-        case 1:
-          envelope2.noteOff();
-          break;
-        case 2:
-          envelope3.noteOff();
-          break;
-        case 3:
-          envelope4.noteOff();
-          break;
-      }
       voices[i].active = false;
+      stopVoice(i);
       break;
     }
   }
-  AudioInterrupts();
+}
+
+void assignVoice(int voiceIndex, byte note, float frequency) {
+  voices[voiceIndex].note = note;
+  voices[voiceIndex].startTime = millis();
+  voices[voiceIndex].active = true;
+
+  switch (voiceIndex) {
+    case 0:
+      sine1.frequency(frequency);
+      envelope1.noteOn();
+      break;
+    case 1:
+      sine2.frequency(frequency);
+      envelope2.noteOn();
+      break;
+    case 2:
+      sine3.frequency(frequency);
+      envelope3.noteOn();
+      break;
+    case 3:
+      sine4.frequency(frequency);
+      envelope4.noteOn();
+      break;
+  }
+}
+
+void stopVoice(int voiceIndex) {
+  switch (voiceIndex) {
+    case 0:
+      envelope1.noteOff();
+      break;
+    case 1:
+      envelope2.noteOff();
+      break;
+    case 2:
+      envelope3.noteOff();
+      break;
+    case 3:
+      envelope4.noteOff();
+      break;
+  }
 }
