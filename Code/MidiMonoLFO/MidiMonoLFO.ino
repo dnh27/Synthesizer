@@ -1,120 +1,77 @@
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
-#include <SD.h>
-#include <SerialFlash.h>
+#include <USBHost_t36.h> // Include the USB Host library
 
-#define VCOButton 1
-#define LFOBUTTON 0
-
-// Constants
-const int NUM_VOICES = 1;  // We only need one voice for this behavior
+USBHost myusb;         // Create USBHost object
+USBHub hub1(myusb);    // Optional: Add support for USB hubs
+MIDIDevice midi1(myusb); // Create a MIDI device object on USBHost
 
 // GUItool: begin automatically generated code
-AudioSynthWaveform       waveform1;      //xy=499,388
-AudioSynthWaveformModulated waveformMod1;   //xy=721,390
-AudioEffectEnvelope      envelope1;      //xy=927,390
-AudioOutputI2S           i2s1;           //xy=1119,372
+AudioSynthWaveform       waveform1;      //xy=399.6666259765625,533.9999389648438
+AudioSynthWaveformModulated waveformMod1;   //xy=621.6666259765625,535.9999389648438
+AudioEffectEnvelope      envelope1;      //xy=827.6666259765625,535.9999389648438
+AudioMixer4              mixer1;         //xy=997.333251953125,537.3332824707031
+AudioOutputI2S           i2s1;           //xy=1164.6666259765625,520.9999084472656
 AudioConnection          patchCord1(waveform1, 0, waveformMod1, 0);
 AudioConnection          patchCord2(waveformMod1, envelope1);
-AudioConnection          patchCord3(envelope1, 0, i2s1, 0);
-AudioConnection          patchCord4(envelope1, 0, i2s1, 1);
-AudioControlSGTL5000     sgtl5000_1;     //xy=757.566650390625,607.566650390625
+AudioConnection          patchCord3(envelope1, 0, mixer1, 0);
+AudioConnection          patchCord4(mixer1, 0, i2s1, 0);
+AudioConnection          patchCord5(mixer1, 0, i2s1, 1);
+AudioControlSGTL5000     sgtl5000_1;     //xy=1712.2222366333008,450.5555534362793
 // GUItool: end automatically generated code
-
-
-int waveforms[4] = {
-  WAVEFORM_SINE,
-  WAVEFORM_SAWTOOTH,
-  WAVEFORM_SQUARE,
-  WAVEFORM_TRIANGLE
-};
-
-// get amount of waveforms
-
-int amount_waveforms = (sizeof(waveforms) / sizeof(int));
-
-int vco_waveform = 0;
-int lfo_waveform = 0;
 
 // Keep track of the current note
 bool noteActive = false;
 byte currentNote = 0;
 
-
 void setup() {
   Serial.begin(115200);
+  while (!Serial) {
+    // Wait for Serial Monitor to connect
+  }
 
-  pinMode(VCOButton, INPUT_PULLUP);
-  pinMode(LFOBUTTON, INPUT_PULLUP);
+  Serial.println("Starting USB Host MIDI");
 
+  // Initialize USBHost
+  myusb.begin();
 
   // MIDI Setup
-  usbMIDI.setHandleNoteOn(myNoteOn);
-  usbMIDI.setHandleNoteOff(myNoteOff);
+  midi1.setHandleNoteOn(myNoteOn);
+  midi1.setHandleNoteOff(myNoteOff);
+
 
   // Audio Setup
   AudioMemory(20);
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.32);
 
-  //LFO
+  // LFO
   waveform1.begin(WAVEFORM_SINE);
 
   waveform1.frequency(2);
   waveform1.amplitude(0.01);
   
-  //MODULATED OSC.
+  // MODULATED OSC.
   waveformMod1.begin(WAVEFORM_SINE);
   waveformMod1.amplitude(0.75);
   
-  
+  mixer1.gain(0, 1);
 }
 
 void loop() {
-  usbMIDI.read();
-
-  waveform1.frequency(map(analogRead(A9), 0, 1023, 0, 20));
-
-  //TODO BUTTONS FOR CHANGING WAVEFORMS
-  if (digitalRead(VCOButton) == LOW){
-
-    Serial.println("VCO BUTTON PRESSED");
-
-    if (vco_waveform >= (amount_waveforms - 1)){
-      vco_waveform = 0;
-    }
-
-    else{
-      vco_waveform += 1;
-    }
-
-    waveformMod1.begin(waveforms[vco_waveform]);
-
-  }
-
-  if (digitalRead(lfo_waveform) == LOW){
-
-    Serial.println("LFO BUTTON PRESSED");
-
-
-    if (lfo_waveform >= (amount_waveforms - 1)){
-      lfo_waveform = 0;
-    }
-
-    else{
-      lfo_waveform += 1;
-    }
-
-    waveform1.begin(waveforms[lfo_waveform]);
-  }
-
-
-
+  // Process USB events
+  myusb.Task();
+  midi1.read();
 }
 
 void myNoteOn(byte channel, byte note, byte velocity) {
-
+  Serial.print("Note On - Channel: ");
+  Serial.print(channel);
+  Serial.print(", Note: ");
+  Serial.print(note);
+  Serial.print(", Velocity: ");
+  Serial.println(velocity);
 
   if (noteActive) {
     // Stop the currently active note
@@ -132,9 +89,18 @@ void myNoteOn(byte channel, byte note, byte velocity) {
 }
 
 void myNoteOff(byte channel, byte note, byte velocity) {
+  Serial.print("Note Off - Channel: ");
+  Serial.print(channel);
+  Serial.print(", Note: ");
+  Serial.print(note);
+  Serial.print(", Velocity: ");
+  Serial.println(velocity);
+
   if (noteActive && note == currentNote) {
     // Stop the current note only if it matches the note-off event
     envelope1.noteOff();
     noteActive = false;
   }
 }
+
+
