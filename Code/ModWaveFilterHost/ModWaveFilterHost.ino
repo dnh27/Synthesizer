@@ -5,6 +5,7 @@
 #include <Encoder.h>
 #include <Adafruit_NeoPixel.h>
 
+
 // GUItool: begin automatically generated code
 AudioSynthWaveform       waveform1;      //xy=745,1466.25
 AudioSynthWaveformModulated waveformMod14; //xy=1189.9999817439486,1802.2619116646902
@@ -46,8 +47,9 @@ AudioFilterStateVariable filter1;        //xy=2232.6390647888184,1630.9722633361
 AudioEffectDelay         delay1;         //xy=2360.555419921875,1415.555591583252
 AudioMixer4              mixer13; //xy=2510.111068725586,1603.1111793518066
 AudioMixer4              mixer2;         //xy=2530.5553283691406,1468.8888759613037
-AudioEffectFreeverb      freeverb1;      //xy=2672.221794128418,1540.5552558898926
-AudioMixer4              mixer3;         //xy=2807.2223205566406,1602.2219886779785
+AudioEffectFreeverb      freeverb1;      //xy=2663.238089425223,1548.9523751395088
+AudioFilterStateVariable filter3;        //xy=2726.0955238342285,1707.5237274169922
+AudioMixer4              mixer3;         //xy=2855.7939109802246,1626.5078048706055
 AudioEffectBitcrusher    bitcrusher1;    //xy=2938.8892784118652,1538.888722896576
 AudioMixer4              mixer4;         //xy=3052.2224884033203,1633.8887672424316
 AudioAmplifier           amp1;           //xy=3215.44443766276,1725.4444376627603
@@ -111,18 +113,21 @@ AudioConnection          patchCord56(delay1, 0, mixer2, 0);
 AudioConnection          patchCord57(delay1, 1, mixer2, 1);
 AudioConnection          patchCord58(delay1, 2, mixer2, 2);
 AudioConnection          patchCord59(delay1, 3, mixer2, 3);
-AudioConnection          patchCord60(mixer13, freeverb1);
-AudioConnection          patchCord61(mixer13, 0, mixer3, 1);
+AudioConnection          patchCord60(mixer13, 0, mixer3, 1);
+AudioConnection          patchCord61(mixer13, freeverb1);
 AudioConnection          patchCord62(mixer2, 0, mixer13, 0);
-AudioConnection          patchCord63(freeverb1, 0, mixer3, 0);
-AudioConnection          patchCord64(mixer3, 0, mixer4, 1);
-AudioConnection          patchCord65(mixer3, bitcrusher1);
-AudioConnection          patchCord66(bitcrusher1, 0, mixer4, 0);
-AudioConnection          patchCord67(mixer4, amp1);
-AudioConnection          patchCord68(amp1, 0, i2s1, 0);
-AudioConnection          patchCord69(amp1, 0, i2s1, 1);
+AudioConnection          patchCord63(freeverb1, 0, filter3, 0);
+AudioConnection          patchCord64(filter3, 0, mixer3, 0);
+AudioConnection          patchCord65(mixer3, 0, mixer4, 1);
+AudioConnection          patchCord66(mixer3, bitcrusher1);
+AudioConnection          patchCord67(bitcrusher1, 0, mixer4, 0);
+AudioConnection          patchCord68(mixer4, amp1);
+AudioConnection          patchCord69(amp1, 0, i2s1, 0);
+AudioConnection          patchCord70(amp1, 0, i2s1, 1);
 AudioControlSGTL5000     sgtl5000_1;     //xy=2332.40234375,1058.23828125
 // GUItool: end automatically generated code
+
+
 
 
 
@@ -176,6 +181,15 @@ const int MIN_VALUE = 0;      // Minimum value for each Encoder position
 const int MAX_VALUE = 100;    // Maximum value for each Encoder position
 
 int lastPosition = -1;        // Track the last detected position
+
+int positionThresholds[NUM_POSITIONS + 1] = { 
+  0, 27, 115, 234, 347, 454, 559, 669, 786, 909, 996, 1024
+};
+
+
+// Value array: Each row corresponds to a potentiometer position, each column to an encoder
+int values[NUM_POSITIONS][NUM_ENCODERS] = {0};
+long encoderLast[NUM_ENCODERS] = {0, 0, 0, 0};
 
 // Create NeoPixel objects for each ring
 Adafruit_NeoPixel ringA(NUM_LEDS, ledRingA, NEO_GRB + NEO_KHZ800);
@@ -353,6 +367,10 @@ void setup() {
   setWaveformType(2, WAVEFORM_SINE);
 
   // Initialize mixer gains
+  values[7][0] = 50;
+  values[7][1] = 50;
+  values[7][2] = 50;
+
 
   //ENVELOPE VOICE MIXERS
   mixer1.gain(0, 0.25);
@@ -392,7 +410,7 @@ void setup() {
   mixer13.gain(1, 0.5);
 
   // Attenuate signal to reduce Noise
-  amp2.gain(0.1);
+  amp2.gain(1);
 
   // Initialize envelopes
   setEnvelopes(100, 100, 100, 300);
@@ -436,18 +454,12 @@ void setup() {
 
   freeverb1.damping(0.5);
   freeverb1.roomsize(0.5);
+  filter3.frequency(10000);
   
 
 }
 
-int positionThresholds[NUM_POSITIONS + 1] = { 
-  0, 27, 115, 234, 347, 454, 559, 669, 786, 909, 996, 1024
-};
 
-
-// Value array: Each row corresponds to a potentiometer position, each column to an encoder
-int values[NUM_POSITIONS][NUM_ENCODERS] = {0};
-long encoderLast[NUM_ENCODERS] = {0, 0, 0, 0};
 
 int determinePosition(int analogValue) {
   for (int i = 0; i < NUM_POSITIONS; i++) {
@@ -589,18 +601,21 @@ void setValues(){
  //Destination
   
   destinationPos = determinePosition(destinationValue);
-  Serial.print("Position: ");
-  Serial.println(destinationPos);
+ 
   handleEncoders(destinationPos);
 
   revRoomSize = values[2][0] / 100.0f;
   revDamping = values[2][1] / 100.0f;
   // Serial.println(revRoomSize);
-  Serial.println(revDamping);
+  // Serial.println(revDamping);
 
   //WAVEFORMS TODO
 
   //AMP MIXER TODO
+  // setMixerGains(0, map(values[7][0], 0, 100, 0, 25) / 100.0f);
+  // setMixerGains(1, map(values[7][1], 0, 100, 0, 25) / 100.0f);
+  // setMixerGains(2, map(values[7][2], 0, 100, 0, 25) / 100.0f);
+
 
   //LP FILTER
   filter1.frequency(map(lpCutValue, 0, 1023, 2000, 12000));
@@ -645,7 +660,7 @@ void setValues(){
  
 
   //VOLUME
-  amp1.gain(map(volumeValue, 0, 1023, 0, 5000)/100);
+  amp1.gain(map(volumeValue, 0, 1023, 0, 500)/100);
 
   //DYNAMIC
 
@@ -697,6 +712,8 @@ void handleEncoders(int currentPosition) {
       Serial.print("Encoder ");
       Serial.print(i);
       Serial.println(" turned clockwise");
+      Serial.print("Position: ");
+      Serial.println(currentPosition);
     } else if (encCurrent[i] < encoderLast[i]) {
       // Decrement value for this encoder
       values[currentPosition][i]--;
@@ -704,6 +721,8 @@ void handleEncoders(int currentPosition) {
       Serial.print("Encoder ");
       Serial.print(i);
       Serial.println(" turned counter-clockwise");
+      Serial.print("Position: ");
+      Serial.println(currentPosition);
     }
     encoderLast[i] = encCurrent[i]; // Update last position
   }
