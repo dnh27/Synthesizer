@@ -150,26 +150,26 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=2332.40234375,1058.23828125
 
 
 //ENCODER DEFINITIONS
-#define encAA 3
-#define encAB 2
-#define encASw 4
+#define encDA 3
+#define encDB 2
+// #define encDSw 4
 
-#define encBA 6
-#define encBB 5
-#define encBSw 8
+#define encAA 6
+#define encAB 5
+// #define encASw 8
 
-#define encCA 11
-#define encCB 9
-#define encCSw 10
+#define encBA 11
+#define encBB 10
+// #define encCSw 10
 
-#define encDA 28
-#define encDB 12
-#define encDSw 29
+#define encCA 28
+#define encCB 12
+// #define encDSw 29
 
 #define ledRingA 32
 #define ledRingB 31
 #define ledRingC 30
-#define ledRingD 29
+#define ledRingD 4
 
 // Define the number of LEDs in each ring
 #define NUM_LEDS 12 // Adjust this based on the number of LEDs in your rings
@@ -191,12 +191,17 @@ int positionThresholds[NUM_POSITIONS + 1] = {
 int values[NUM_POSITIONS][NUM_ENCODERS] = {0};
 long encoderLast[NUM_ENCODERS] = {0, 0, 0, 0};
 
-// Create NeoPixel objects for each ring
-Adafruit_NeoPixel ringA(NUM_LEDS, ledRingA, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel ringB(NUM_LEDS, ledRingB, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel ringC(NUM_LEDS, ledRingC, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel ringD(NUM_LEDS, ledRingD, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel ledRings[NUM_ENCODERS] = {
+  Adafruit_NeoPixel(NUM_LEDS, ledRingA, NEO_GRB + NEO_KHZ800),
+  Adafruit_NeoPixel(NUM_LEDS, ledRingB, NEO_GRB + NEO_KHZ800),
+  Adafruit_NeoPixel(NUM_LEDS, ledRingC, NEO_GRB + NEO_KHZ800),
+  Adafruit_NeoPixel(NUM_LEDS, ledRingD, NEO_GRB + NEO_KHZ800),
+};
 
+// Adafruit_NeoPixel ringA(NUM_LEDS, ledRingA, NEO_GRB + NEO_KHZ800);
+// Adafruit_NeoPixel ringB(NUM_LEDS, ledRingB, NEO_GRB + NEO_KHZ800);
+// Adafruit_NeoPixel ringC(NUM_LEDS, ledRingC, NEO_GRB + NEO_KHZ800);
+// Adafruit_NeoPixel ringD(NUM_LEDS, ledRingD, NEO_GRB + NEO_KHZ800);
 
 int voiceAttack = 0;
 int voiceDecay = 0;
@@ -287,7 +292,7 @@ AudioMixer4* mixers[NUM_VOICES] = {
 };
 
 // Function to set waveform type for each group
-void setWaveformType(int groupIndex, int waveformType, float frequency = 1) {
+void setWaveformType(int groupIndex, int waveformType, int frequency = 1) {
   if (groupIndex < 0 || groupIndex >= 3) return; // Validate the group index
   for (int voice = 0; voice < NUM_VOICES; voice++) {
     waveforms[groupIndex][voice]->begin(1, frequency, waveformType);
@@ -298,16 +303,20 @@ void setWaveformType(int groupIndex, int waveformType, float frequency = 1) {
 void setEnvelopes(float attack, float decay, float sustain, float release) {
   for (int voice = 0; voice < NUM_VOICES; voice++) {
     envelopes[voice]->attack(attack);
-    envelopes[voice]->attack(decay);
-    envelopes[voice]->release(sustain);
+    envelopes[voice]->decay(decay);
+    envelopes[voice]->sustain(sustain);
     envelopes[voice]->release(release);
   }
 }
 
-// Function to set the gain for a specific mixer channel
-void setMixerGains(int channel, float gain) {
-  if (channel < 0 || channel >= NUM_VOICES) return; // Validate the channel number
-  mixers[channel]->gain(channel, gain); // Set gain for the specific channel
+// Function to set the gain for a specific waveform across all voices
+void setMixerGains(int waveformChannel, float gain) {
+  if (waveformChannel < 0 || waveformChannel >= 3) return; // Validate the waveform channel (0, 1, or 2)
+
+  // Set the gain for the specified waveform channel across all voices
+  for (int voice = 0; voice < NUM_VOICES; voice++) {
+    mixers[voice]->gain(waveformChannel, gain);  // Set gain for the specified waveform channel for each voice
+  }
 }
 // Audio object declarations remain as in your original code
 
@@ -330,25 +339,43 @@ void setup() {
   sgtl5000_1.volume(0.6);
   sgtl5000_1.adcHighPassFilterDisable();
 
-  ringA.begin();
-  ringB.begin();
-  ringC.begin();
-  ringD.begin();
+  // ringA.begin();
+  // ringB.begin();
+  // ringC.begin();
+  // ringD.begin();
 
-  // Clear all LEDs to start
-  ringA.clear();
-  ringB.clear();
-  ringC.clear();
-  ringD.clear();
+  // // Set brightness to a low value to minimize current draw
+  // ringA.setBrightness(25); // Adjust brightness as needed (0-255)
+  // ringB.setBrightness(25);
+  // ringC.setBrightness(25);
+  // ringD.setBrightness(25);
 
-  // Show initial state (off)
-  ringA.show();
-  ringB.show();
-  ringC.show();
-  ringD.show();
+  // // Clear all LEDs to start
+  // ringA.clear();
+  // ringB.clear();
+  // ringC.clear();
+  // ringD.clear();
+
+  // // Show initial state (off)
+  // ringA.show();
+  // ringB.show();
+  // ringC.show();
+  // ringD.show();
+
+  // // Test by lighting up all rings in different colors
+  // lightUpRing(ringA, 255, 0, 0);   // Red
+  // lightUpRing(ringB, 0, 255, 0);   // Green
+  // lightUpRing(ringC, 0, 0, 255);   // Blue
+  // lightUpRing(ringD, 255, 255, 0); // Yellow
+
+  // Initialize LED rings
+  for (int i = 0; i < NUM_ENCODERS; i++) {
+    ledRings[i].begin();
+    ledRings[i].show();  // Turn off all LEDs initially
+  }
 
   // Initialize oscillators
-
+  
   //Operators
   
     //LFO
@@ -361,10 +388,15 @@ void setup() {
 
   amp1.gain(1);
 
+  for (int voice = 0; voice < NUM_VOICES; voice++) {
+    for (int groupIndex = 0; groupIndex < 3; groupIndex++){
+    waveforms[groupIndex][voice]->frequencyModulation(0.05);
+    }
+  }
 
   setWaveformType(0, WAVEFORM_SINE);
-  setWaveformType(1, WAVEFORM_SINE);
-  setWaveformType(2, WAVEFORM_SINE);
+  setWaveformType(1, WAVEFORM_SAWTOOTH);
+  setWaveformType(2, WAVEFORM_TRIANGLE);
 
   // Initialize mixer gains
   values[7][0] = 50;
@@ -433,10 +465,10 @@ void setup() {
   pinMode(hpCutPin, INPUT);
 
   // Initialize encoder switch pins
-  pinMode(encASw, INPUT_PULLUP);
-  pinMode(encBSw, INPUT_PULLUP);
-  pinMode(encCSw, INPUT_PULLUP);
-  pinMode(encDSw, INPUT_PULLUP);
+  // pinMode(encASw, INPUT_PULLUP);
+  // pinMode(encBSw, INPUT_PULLUP);
+  // pinMode(encCSw, INPUT_PULLUP);
+  // pinMode(encDSw, INPUT_PULLUP);
   
   filter1.frequency(12000);
   filter1.resonance(0.7);
@@ -459,7 +491,13 @@ void setup() {
 
 }
 
-
+// Helper function to light up a ring in a single color
+void lightUpRing(Adafruit_NeoPixel &ring, uint8_t red, uint8_t green, uint8_t blue) {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    ring.setPixelColor(i, ring.Color(red, green, blue));
+  }
+  ring.show();
+}
 
 int determinePosition(int analogValue) {
   for (int i = 0; i < NUM_POSITIONS; i++) {
@@ -484,7 +522,7 @@ void loop() {
 void myNoteOn(byte channel, byte note, byte velocity) {
   float frequency = 440.0 * pow(2.0, (note - 69) / 12.0);
   AudioNoInterrupts();
-
+  Serial.println(AudioMemoryUsageMax());
   // Check for available voices
   for (int i = 0; i < NUM_VOICES; i++) {
     if (!voices[i].active) {
@@ -697,37 +735,99 @@ int clampValue(int value, int minVal, int maxVal) {
   if (value > maxVal) return maxVal;
   return value;
 }
-// Function to handle encoder updates
+
+// Track round trips for each encoder
+int roundTrips[NUM_ENCODERS] = {0, 0, 0, 0};
+const int BRIGHTNESS_STEP = 5;  // Brightness increase per round trip
+const int MAX_BRIGHTNESS = 100;  // Limit brightness for testing
+
+// Function to update the LED ring progress with round trips
+void updateLedRing(int encoderIndex, int value) {
+  Adafruit_NeoPixel* ring = &ledRings[encoderIndex];
+
+  // Number of LEDs to light up (scaled down for minimal current usage)
+  int numLedsToLight = map(value % 100, 0, 100, 0, NUM_LEDS / 4);  // Light up fewer LEDs
+  int roundTripCount = value / 100;  // Number of round trips completed
+  roundTrips[encoderIndex] = roundTripCount;
+
+  // Calculate brightness based on round trip count (limited to MAX_BRIGHTNESS)
+  int brightnessLevel = min((roundTripCount * BRIGHTNESS_STEP), MAX_BRIGHTNESS);
+
+  Serial.print("Ring ");
+  Serial.print(encoderIndex);
+  Serial.print(" | Value: ");
+  Serial.print(value);
+  Serial.print(" | LEDs: ");
+  Serial.print(numLedsToLight);
+  Serial.print(" | Brightness: ");
+  Serial.println(brightnessLevel);
+
+  // Light up LEDs according to progress
+  for (int i = 0; i < NUM_LEDS; i++) {
+    if (i == numLedsToLight) {
+      ring->setPixelColor(i, ring->Color(brightnessLevel, brightnessLevel, 0));  // Yellow with adjusted brightness
+    } else {
+      ring->setPixelColor(i, ring->Color(0, 0, 0));  // Turn off remaining LEDs
+    }
+  }
+  ring->show();  // Update the LED ring
+}
+
 void handleEncoders(int currentPosition) {
   long encCurrent[NUM_ENCODERS];
-  Encoder* encoders[NUM_ENCODERS] = {&encA, &encB, &encC, &encD};
+  Encoder* encoders[NUM_ENCODERS] = {&encC, &encB, &encA, &encD};  // Corrected the encoder order based on the ring mapping
 
   // Read all encoders
   for (int i = 0; i < NUM_ENCODERS; i++) {
     encCurrent[i] = encoders[i]->read();
-    if (encCurrent[i] > encoderLast[i]) {
-      // Increment value for this encoder
-      values[currentPosition][i]++;
-      values[currentPosition][i] = clampValue(values[currentPosition][i], MIN_VALUE, MAX_VALUE);
-      Serial.print("Encoder ");
-      Serial.print(i);
-      Serial.println(" turned clockwise");
-      Serial.print("Position: ");
-      Serial.println(currentPosition);
-    } else if (encCurrent[i] < encoderLast[i]) {
-      // Decrement value for this encoder
-      values[currentPosition][i]--;
-      values[currentPosition][i] = clampValue(values[currentPosition][i], MIN_VALUE, MAX_VALUE);
-      Serial.print("Encoder ");
-      Serial.print(i);
-      Serial.println(" turned counter-clockwise");
-      Serial.print("Position: ");
-      Serial.println(currentPosition);
+
+    if (encCurrent[i] != encoderLast[i]) {
+      int delta = encCurrent[i] - encoderLast[i];  // Difference in encoder position
+      int adjustment = delta > 0 ? 1 : -1;  // Determine adjustment (clockwise or counterclockwise)
+
+      switch (currentPosition) {
+        case 8:  // Waveform modulation mix
+          if (i <= 2) {  // Encoders 0, 1, 2 adjust the mix
+            values[currentPosition][i] += adjustment;  // Increment or decrement the value
+            values[currentPosition][i] = clampValue(values[currentPosition][i], 0, 100);  // Clamp to 0-100
+
+            float gainValue = values[currentPosition][i] / 400.0;  // Convert to 0.0 - 0.25 range
+            setMixerGains(i, gainValue);  // Adjust the mixer gain for this channel
+
+            // Debug output for Serial Monitor
+            Serial.print("Set mixer gain for channel ");
+            Serial.print(i);
+            Serial.print(" to: ");
+            Serial.println(gainValue);
+
+            // Update the LED ring progress
+            updateLedRing(i, values[currentPosition][i]);
+          } else if (i == 3) {  // Encoder 3 adjusts LFO frequency
+            values[currentPosition][i] += adjustment;  // Increment or decrement the value
+            values[currentPosition][i] = clampValue(values[currentPosition][i], 0, 100);  // Clamp to 0-100
+
+            float lfoFrequency = map(values[currentPosition][i], 0, 100, 0.1, 10.0);  // Map to 0.1 - 10 Hz
+            waveform1.frequency(lfoFrequency);  // Adjust the LFO frequency
+
+            // Debug output for Serial Monitor
+            Serial.print("Set LFO frequency to: ");
+            Serial.println(lfoFrequency);
+
+            // Update the LED ring progress
+            updateLedRing(i, values[currentPosition][i]);
+          }
+          break;
+
+        default:
+          // Handle other positions if needed
+          Serial.print("Encoder ");
+          Serial.print(i);
+          Serial.print(" adjusted at position ");
+          Serial.println(currentPosition);
+          break;
+      }
+
+      encoderLast[i] = encCurrent[i];  // Update the last position
     }
-    encoderLast[i] = encCurrent[i]; // Update last position
   }
 }
-
-
-
-
