@@ -5,7 +5,6 @@
 #include <Encoder.h>
 #include <Adafruit_NeoPixel.h>
 
-
 // GUItool: begin automatically generated code
 AudioSynthWaveform       waveform1;      //xy=745,1466.25
 AudioSynthWaveformModulated waveformMod14; //xy=1189.9999817439486,1802.2619116646902
@@ -18,7 +17,7 @@ AudioSynthWaveformModulated waveformMod7; //xy=1227.75,1125
 AudioSynthWaveformModulated waveformMod18; //xy=1223.5951747894287,2174.0475997924805
 AudioSynthWaveformModulated waveformMod11; //xy=1228.7499989100863,1501.0119574410573
 AudioSynthWaveformModulated waveformMod1;   //xy=1233.0119457244873,590.1547698974609
-AudioSynthWaveformModulated waveformMod10; //xy=1235.8929443359375,1412.4406433105469
+AudioSynthWaveformModulated waveformMod10; //xy=1241.3474884033203,1455.1680126190186
 AudioSynthWaveformModulated waveformMod3;   //xy=1253.5475673675537,757.4761276245117
 AudioSynthWaveformModulated waveformMod4;   //xy=1253.75,865
 AudioSynthWaveformModulated waveformMod8; //xy=1256.75,1187
@@ -38,22 +37,24 @@ AudioEffectEnvelope      envelope4; //xy=1607.5000171661377,1550.0000457763672
 AudioEffectEnvelope      envelope3; //xy=1621.4168167114258,1150.333251953125
 AudioEffectEnvelope      envelope2;      //xy=1685.7499923706055,978.6667156219482
 AudioEffectEnvelope      envelope1;      //xy=1722.952377319336,856.0474662780762
-AudioMixer4              mixer1;         //xy=1803.3333740234375,1508.3334350585938
+AudioSynthWaveformDc     dc1;            //xy=1798.5951232910156,1919.3096504211426
 AudioMixer4              mixer5; //xy=1808.75,1667.5
+AudioMixer4              mixer1;         //xy=1893.3334121704102,1183.3333597183228
+AudioAmplifier           amp2;           //xy=1967.1108627319336,1785.920612335205
 AudioMixer4              mixer6; //xy=1984.33349609375,1622.25927734375
-AudioAmplifier           amp2;           //xy=2127.1109466552734,1728.777847290039
-AudioFilterStateVariable filter2;        //xy=2172.2224731445312,1518.8888778686523
-AudioFilterStateVariable filter1;        //xy=2232.6390647888184,1630.9722633361816
-AudioEffectDelay         delay1;         //xy=2360.555419921875,1415.555591583252
-AudioMixer4              mixer13; //xy=2510.111068725586,1603.1111793518066
-AudioMixer4              mixer2;         //xy=2530.5553283691406,1468.8888759613037
-AudioEffectFreeverb      freeverb1;      //xy=2663.238089425223,1548.9523751395088
-AudioFilterStateVariable filter3;        //xy=2726.0955238342285,1707.5237274169922
-AudioMixer4              mixer3;         //xy=2855.7939109802246,1626.5078048706055
-AudioEffectBitcrusher    bitcrusher1;    //xy=2938.8892784118652,1538.888722896576
-AudioMixer4              mixer4;         //xy=3052.2224884033203,1633.8887672424316
-AudioAmplifier           amp1;           //xy=3215.44443766276,1725.4444376627603
-AudioOutputI2S           i2s1;           //xy=3278.667106628418,1616.4520263671875
+AudioEffectEnvelope      envelope7; //xy=1994.5,1937.40478515625
+AudioEffectEnvelope      envelope8; //xy=1998.785888671875,1991.6905517578125
+AudioFilterStateVariable filter2;        //xy=2161.508026123047,1533.1745433807373
+AudioFilterStateVariable filter1;        //xy=2184.7819023132324,1695.258014678955
+AudioMixer4              mixer13; //xy=2325.1109466552734,1463.1111907958984
+AudioEffectDelay         delay1;         //xy=2343.737106323242,1192.8283309936523
+AudioMixer4              mixer2;         //xy=2345.555206298828,1328.8888874053955
+AudioEffectFreeverb      freeverb1;      //xy=2390.7379150390625,1606.4525146484375
+AudioMixer4              mixer3;         //xy=2568.2938346862793,1511.5078926086426
+AudioEffectBitcrusher    bitcrusher1;    //xy=2651.38920211792,1423.888810634613
+AudioMixer4              mixer4;         //xy=2764.722412109375,1518.8888549804688
+AudioAmplifier           amp1;           //xy=2882.944079081217,1665.4444376627603
+AudioOutputI2S           i2s1;           //xy=2946.166748046875,1556.4520263671875
 AudioConnection          patchCord1(waveform1, 0, waveformMod1, 0);
 AudioConnection          patchCord2(waveform1, 0, waveformMod2, 0);
 AudioConnection          patchCord3(waveform1, 0, waveformMod3, 0);
@@ -102,30 +103,34 @@ AudioConnection          patchCord45(envelope4, 0, mixer5, 0);
 AudioConnection          patchCord46(envelope3, 0, mixer1, 2);
 AudioConnection          patchCord47(envelope2, 0, mixer1, 1);
 AudioConnection          patchCord48(envelope1, 0, mixer1, 0);
-AudioConnection          patchCord49(mixer1, 0, mixer6, 0);
-AudioConnection          patchCord50(mixer5, 0, mixer6, 1);
-AudioConnection          patchCord51(mixer6, amp2);
-AudioConnection          patchCord52(amp2, 0, filter1, 0);
-AudioConnection          patchCord53(filter2, 2, delay1, 0);
-AudioConnection          patchCord54(filter2, 2, mixer13, 1);
-AudioConnection          patchCord55(filter1, 0, filter2, 0);
-AudioConnection          patchCord56(delay1, 0, mixer2, 0);
-AudioConnection          patchCord57(delay1, 1, mixer2, 1);
-AudioConnection          patchCord58(delay1, 2, mixer2, 2);
-AudioConnection          patchCord59(delay1, 3, mixer2, 3);
+AudioConnection          patchCord49(dc1, envelope7);
+AudioConnection          patchCord50(dc1, envelope8);
+AudioConnection          patchCord51(mixer5, 0, mixer6, 1);
+AudioConnection          patchCord52(mixer1, 0, mixer6, 0);
+AudioConnection          patchCord53(amp2, 0, filter1, 0);
+AudioConnection          patchCord54(mixer6, amp2);
+AudioConnection          patchCord55(envelope7, 0, filter2, 1);
+AudioConnection          patchCord56(envelope8, 0, filter1, 1);
+AudioConnection          patchCord57(filter2, 2, delay1, 0);
+AudioConnection          patchCord58(filter2, 2, mixer13, 1);
+AudioConnection          patchCord59(filter1, 0, filter2, 0);
 AudioConnection          patchCord60(mixer13, 0, mixer3, 1);
 AudioConnection          patchCord61(mixer13, freeverb1);
-AudioConnection          patchCord62(mixer2, 0, mixer13, 0);
-AudioConnection          patchCord63(freeverb1, 0, filter3, 0);
-AudioConnection          patchCord64(filter3, 0, mixer3, 0);
-AudioConnection          patchCord65(mixer3, 0, mixer4, 1);
-AudioConnection          patchCord66(mixer3, bitcrusher1);
-AudioConnection          patchCord67(bitcrusher1, 0, mixer4, 0);
-AudioConnection          patchCord68(mixer4, amp1);
-AudioConnection          patchCord69(amp1, 0, i2s1, 0);
-AudioConnection          patchCord70(amp1, 0, i2s1, 1);
+AudioConnection          patchCord62(delay1, 0, mixer2, 0);
+AudioConnection          patchCord63(delay1, 1, mixer2, 1);
+AudioConnection          patchCord64(delay1, 2, mixer2, 2);
+AudioConnection          patchCord65(delay1, 3, mixer2, 3);
+AudioConnection          patchCord66(mixer2, 0, mixer13, 0);
+AudioConnection          patchCord67(freeverb1, 0, mixer3, 0);
+AudioConnection          patchCord68(mixer3, 0, mixer4, 1);
+AudioConnection          patchCord69(mixer3, bitcrusher1);
+AudioConnection          patchCord70(bitcrusher1, 0, mixer4, 0);
+AudioConnection          patchCord71(mixer4, amp1);
+AudioConnection          patchCord72(amp1, 0, i2s1, 0);
+AudioConnection          patchCord73(amp1, 0, i2s1, 1);
 AudioControlSGTL5000     sgtl5000_1;     //xy=2332.40234375,1058.23828125
 // GUItool: end automatically generated code
+
 
 
 
@@ -301,11 +306,17 @@ void setWaveformType(int groupIndex, int waveformType, int frequency = 1) {
 
 // Function to set envelope parameters
 void setEnvelopes(float attack, float decay, float sustain, float release) {
+  // Only update parameters that are not -1 (i.e., the ones passed by the handleEncoder function)
+  if (attack >= 0) voiceAttack = attack;
+  if (decay >= 0) voiceDecay = decay;
+  if (sustain >= 0) voiceSustain = sustain;
+  if (release >= 0) voiceRelease = release;
+
   for (int voice = 0; voice < NUM_VOICES; voice++) {
-    envelopes[voice]->attack(attack);
-    envelopes[voice]->decay(decay);
-    envelopes[voice]->sustain(sustain);
-    envelopes[voice]->release(release);
+    envelopes[voice]->attack(voiceAttack);
+    envelopes[voice]->decay(voiceDecay);
+    envelopes[voice]->sustain(voiceSustain);
+    envelopes[voice]->release(voiceRelease);
   }
 }
 
@@ -421,9 +432,9 @@ void setup() {
 
   //DELAY MIXER
   mixer2.gain(0, 0.25);
-  mixer2.gain(1, 0.25);
-  mixer2.gain(2, 0.25);
-  mixer2.gain(3, 0.25);
+  mixer2.gain(1, 0.2);
+  mixer2.gain(2, 0.15);
+  mixer2.gain(3, 0.1);
 
   //REVERB DRY/WET MIXER
   mixer3.gain(0, 0.25);
@@ -486,7 +497,7 @@ void setup() {
 
   freeverb1.damping(0.5);
   freeverb1.roomsize(0.5);
-  filter3.frequency(10000);
+  // filter3.frequency(10000);
   
 
 }
@@ -786,7 +797,91 @@ void handleEncoders(int currentPosition) {
       int adjustment = delta > 0 ? 1 : -1;  // Determine adjustment (clockwise or counterclockwise)
 
       switch (currentPosition) {
-        case 8:  // Waveform modulation mix
+        case 3:  // Reverb control
+          if (i == 0) {
+            // Encoder 0 adjusts damping
+            values[currentPosition][i] += adjustment;  // Adjust the damping value
+            values[currentPosition][i] = clampValue(values[currentPosition][i], 0, 100);  // Clamp between 0 and 100
+
+            float dampingValue = values[currentPosition][i] / 100.0;  // Scale to 0.0 - 1.0
+            freeverb1.damping(dampingValue);  // Set damping value
+
+            // Debug output for Serial Monitor
+            Serial.print("Set reverb damping to: ");
+            Serial.println(dampingValue);
+
+            // Update the LED ring progress
+            updateLedRing(i, values[currentPosition][i]);
+          } else if (i == 1) {
+            // Encoder 1 adjusts room size
+            values[currentPosition][i] += adjustment;  // Adjust the room size value
+            values[currentPosition][i] = clampValue(values[currentPosition][i], 0, 100);  // Clamp between 0 and 100
+
+            float roomsizeValue = values[currentPosition][i] / 100.0;  // Scale to 0.0 - 1.0
+            freeverb1.roomsize(roomsizeValue);  // Set room size value
+
+            // Debug output for Serial Monitor
+            Serial.print("Set reverb room size to: ");
+            Serial.println(roomsizeValue);
+
+            // Update the LED ring progress
+            updateLedRing(i, values[currentPosition][i]);
+          }
+          break;
+        case 4:  // Delay time adjustment
+          values[currentPosition][i] += adjustment;  // Increment or decrement the delay time
+          values[currentPosition][i] = clampValue(values[currentPosition][i], 100, 1000);  // Clamp between 100 ms and 1000 ms
+
+          delay1.delay(i, values[currentPosition][i]);  // Set the delay for this tap
+
+          // Debug output for Serial Monitor
+          Serial.print("Set delay time for channel ");
+          Serial.print(i);
+          Serial.print(" to: ");
+          Serial.print(values[currentPosition][i]);
+          Serial.println(" ms");
+
+          // Update the LED ring progress
+          updateLedRing(i, map(values[currentPosition][i], 100, 1000, 0, 100));  // Map to 0-100 for LED progress
+          break;
+
+        case 7: {  // Envelope adjustment (using braces to create a new scope)
+          values[currentPosition][i] += adjustment;  // Increment or decrement the value
+          values[currentPosition][i] = clampValue(values[currentPosition][i], 0, 100);  // Clamp to 0-100
+
+          float envelopeValue;  // Declare the variable outside of inner switch
+          if (i == 2) {
+            envelopeValue = values[currentPosition][i] / 100.0f ;  // Sustain: 0 to 1
+          } else {
+            envelopeValue = map(values[currentPosition][i], 0, 100, 0, 1000);  // Attack/Decay/Release: 0 to 1000 ms
+          }
+
+          // Update the appropriate envelope parameter
+          switch (i) {
+            case 0:
+              setEnvelopes(envelopeValue, -1, -1, -1);  // Adjust attack
+              Serial.print("Set envelope attack to: ");
+              break;
+            case 1:
+              setEnvelopes(-1, envelopeValue, -1, -1);  // Adjust decay
+              Serial.print("Set envelope decay to: ");
+              break;
+            case 2:
+              setEnvelopes(-1, -1, envelopeValue, -1);  // Adjust sustain
+              Serial.print("Set envelope sustain to: ");
+              break;
+            case 3:
+              setEnvelopes(-1, -1, -1, envelopeValue);  // Adjust release
+              Serial.print("Set envelope release to: ");
+              break;
+          }
+
+          Serial.println(envelopeValue);
+          updateLedRing(i, values[currentPosition][i]);  // Update the LED ring progress
+          break;
+        }
+
+        case 8: {  // Waveform modulation mix (also wrapped in braces)
           if (i <= 2) {  // Encoders 0, 1, 2 adjust the mix
             values[currentPosition][i] += adjustment;  // Increment or decrement the value
             values[currentPosition][i] = clampValue(values[currentPosition][i], 0, 100);  // Clamp to 0-100
@@ -800,8 +895,7 @@ void handleEncoders(int currentPosition) {
             Serial.print(" to: ");
             Serial.println(gainValue);
 
-            // Update the LED ring progress
-            updateLedRing(i, values[currentPosition][i]);
+            updateLedRing(i, values[currentPosition][i]);  // Update the LED ring progress
           } else if (i == 3) {  // Encoder 3 adjusts LFO frequency
             values[currentPosition][i] += adjustment;  // Increment or decrement the value
             values[currentPosition][i] = clampValue(values[currentPosition][i], 0, 100);  // Clamp to 0-100
@@ -813,18 +907,19 @@ void handleEncoders(int currentPosition) {
             Serial.print("Set LFO frequency to: ");
             Serial.println(lfoFrequency);
 
-            // Update the LED ring progress
-            updateLedRing(i, values[currentPosition][i]);
+            updateLedRing(i, values[currentPosition][i]);  // Update the LED ring progress
           }
           break;
+        }
 
-        default:
+        default: {
           // Handle other positions if needed
           Serial.print("Encoder ");
           Serial.print(i);
           Serial.print(" adjusted at position ");
           Serial.println(currentPosition);
           break;
+        }
       }
 
       encoderLast[i] = encCurrent[i];  // Update the last position
