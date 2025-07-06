@@ -12,17 +12,15 @@ Folgende Ressourcen werde ich verwenden um den Synthesizer zu bauen:
 
 ### Was will ich min. erreichen
 Ich will einen digitalen Synthesizer bauen, welcher einem modernen subtraktivem Synthesizer, bei den wichtigsten Funktionen in nichts nachsteht. D.h. mehrere Oszillatoren, Filter, Artikulationsmöglichkeiten und Effekte
+
+### [Materialliste](Teile/Materialliste_MorphSynth.md)
+
 ### Skizzen
 
 #### Minimales Produkt
 ![500](Skizzen/MinimalesProduktV2.excalidraw.png)
 
-
-### [Materialliste](Teile/Materialliste_MorphSynth.md)
-
 ## Fertiges Produkt
 
 ![](synthesizer.jpg)
 
-
-[Links](Links.md)
